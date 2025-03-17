@@ -1,5 +1,4 @@
 # Simple-Calculator
-# Simple-Calculator
 
 ## Modern Calculator with Sleek UI
 
