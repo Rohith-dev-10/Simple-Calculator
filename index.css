@@ -1,0 +1,723 @@
+/* =============================================
+   CALCULATOR CSS - COMPREHENSIVE VERSION
+   Modern design with animations and features
+   ============================================= */
+
+/* ===== BASE STYLES & RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+:root {
+    /* Primary Colors */
+    --primary-gradient-start: #667eea;
+    --primary-gradient-end: #764ba2;
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --button-hover: rgba(255, 255, 255, 0.2);
+    --operator-bg: rgba(255, 165, 0, 0.5);
+    --equals-bg: rgba(46, 204, 113, 0.7);
+    --clear-bg: rgba(231, 76, 60, 0.7);
+    
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-display: #ffffff;
+    
+    /* Shadows */
+    --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.2);
+    --shadow-dark: 0 15px 35px rgba(0, 0, 0, 0.3);
+    --shadow-inset: inset 0 5px 10px rgba(0, 0, 0, 0.1);
+    
+    /* Border Radius */
+    --radius-small: 10px;
+    --radius-medium: 15px;
+    --radius-large: 20px;
+    
+    /* Animation Timing */
+    --transition-fast: 0.2s;
+    --transition-medium: 0.3s;
+    --transition-slow: 0.5s;
+    
+    /* Spacing */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 25px;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+/* ===== ANIMATED BACKGROUND PARTICLES ===== */
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    animation: float 10s infinite ease-in-out alternate;
+}
+
+body::before {
+    top: -150px;
+    left: -150px;
+    animation-delay: 0s;
+}
+
+body::after {
+    bottom: -150px;
+    right: -150px;
+    width: 250px;
+    height: 250px;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    50% {
+        transform: translate(100px, 50px) scale(1.2) rotate(180deg);
+    }
+    100% {
+        transform: translate(50px, 100px) scale(1) rotate(360deg);
+    }
+}
+
+/* ===== MAIN CALCULATOR CONTAINER ===== */
+#calculator {
+    width: 360px;
+    border-radius: var(--radius-large);
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    padding: var(--spacing-xl);
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    animation: calculator-appear 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+    transform-origin: center center;
+}
+
+@keyframes calculator-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+#calculator:hover {
+    box-shadow: var(--shadow-dark), 0 0 30px rgba(103, 126, 234, 0.5);
+}
+
+/* ===== CALCULATOR DISPLAY ===== */
+#display {
+    width: 100%;
+    height: 90px;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: var(--radius-medium);
+    text-align: right;
+    font-size: 2.5rem;
+    color: var(--text-display);
+    caret-color: transparent;
+    outline: none;
+    box-shadow: var(--shadow-inset);
+    transition: all var(--transition-medium);
+    font-weight: 300;
+    letter-spacing: 1px;
+    overflow: hidden;
+    position: relative;
+}
+
+#display::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: input-shine 2s infinite;
+}
+
+@keyframes input-shine {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+#display:focus {
+    box-shadow: var(--shadow-inset), 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== CALCULATOR KEYS LAYOUT ===== */
+#keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: var(--spacing-md);
+    animation: keys-appear 0.6s ease-out forwards;
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+@keyframes keys-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== BUTTON STYLES ===== */
+button {
+    height: 70px;
+    background: var(--button-bg);
+    border: none;
+    border-radius: var(--radius-small);
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    box-shadow: var(--shadow-light);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+}
+
+button:hover {
+    background: var(--button-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+button:hover::before {
+    opacity: 1;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Press Animation */
+@keyframes button-press {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Button Light Effect Animation */
+@keyframes button-light {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Special buttons styling */
+button:nth-child(1), /* + */
+button:nth-child(5), /* - */
+button:nth-child(9), /* * */
+button:nth-child(13) /* / */ {
+    background: var(--operator-bg);
+    font-weight: 600;
+}
+
+button:nth-child(1):hover,
+button:nth-child(5):hover,
+button:nth-child(9):hover,
+button:nth-child(13):hover {
+    background: rgba(255, 165, 0, 0.7);
+}
+
+button:nth-child(16) /* = */ {
+    background: var(--equals-bg);
+    grid-column: span 2;
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+}
+
+button:nth-child(16):hover {
+    background: rgba(46, 204, 113, 0.9);
+}
+
+button:nth-child(16)::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.8s, transform 0.8s;
+}
+
+button:nth-child(16):hover::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+button:nth-child(17) /* clear */ {
+    background: var(--clear-bg);
+    grid-column: span 2;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:nth-child(17):hover {
+    background: rgba(231, 76, 60, 0.9);
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+button {
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+/* Staggered button appearance */
+#keys button:nth-child(1) { animation-delay: 0.1s; }
+#keys button:nth-child(2) { animation-delay: 0.12s; }
+#keys button:nth-child(3) { animation-delay: 0.14s; }
+#keys button:nth-child(4) { animation-delay: 0.16s; }
+#keys button:nth-child(5) { animation-delay: 0.18s; }
+#keys button:nth-child(6) { animation-delay: 0.2s; }
+#keys button:nth-child(7) { animation-delay: 0.22s; }
+#keys button:nth-child(8) { animation-delay: 0.24s; }
+#keys button:nth-child(9) { animation-delay: 0.26s; }
+#keys button:nth-child(10) { animation-delay: 0.28s; }
+#keys button:nth-child(11) { animation-delay: 0.3s; }
+#keys button:nth-child(12) { animation-delay: 0.32s; }
+#keys button:nth-child(13) { animation-delay: 0.34s; }
+#keys button:nth-child(14) { animation-delay: 0.36s; }
+#keys button:nth-child(15) { animation-delay: 0.38s; }
+#keys button:nth-child(16) { animation-delay: 0.4s; }
+#keys button:nth-child(17) { animation-delay: 0.42s; }
+
+/* ===== CALCULATOR THEME TOGGLE (OPTIONAL) ===== */
+/* This adds a dark/light mode toggle that can be used with JavaScript */
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle.active {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.theme-toggle.active::before {
+    left: calc(100% - 23px);
+    background: #333;
+}
+
+/* ===== CALCULATOR HISTORY DISPLAY (OPTIONAL) ===== */
+.calc-history {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 200px;
+    max-height: 300px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-medium);
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    box-shadow: var(--shadow-medium);
+    transform: translateX(-250px);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.calc-history.show {
+    transform: translateX(0);
+}
+
+.calc-history h3 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+.history-item {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== LOADING ANIMATIONS (OPTIONAL) ===== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.loading-overlay.loaded {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== KEYPAD FEEDBACK EFFECTS ===== */
+@keyframes key-feedback {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.key-feedback {
+    animation: key-feedback 0.2s forwards;
+}
+
+/* ===== CALCULATION RESULT ANIMATION ===== */
+@keyframes result-highlight {
+    0% {
+        color: var(--text-display);
+    }
+    30% {
+        color: #4cd137;
+    }
+    100% {
+        color: var(--text-display);
+    }
+}
+
+.result-animation {
+    animation: result-highlight 0.8s forwards;
+}
+
+/* ===== ERROR STATE ANIMATION ===== */
+@keyframes error-shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20%, 60% {
+        transform: translateX(-5px);
+    }
+    40%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes error-glow {
+    0%, 100% {
+        box-shadow: var(--shadow-inset);
+    }
+    50% {
+        box-shadow: var(--shadow-inset), 0 0 15px rgba(231, 76, 60, 0.7);
+    }
+}
+
+.error-animation {
+    animation: error-shake 0.4s forwards, error-glow 1s forwards;
+    color: var(--clear-bg) !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 480px) {
+    #calculator {
+        width: 90%;
+        max-width: 340px;
+        padding: var(--spacing-md);
+        margin: 0 auto;
+    }
+    
+    #display {
+        font-size: 2rem;
+        height: 75px;
+    }
+    
+    button {
+        height: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .calc-history {
+        width: 150px;
+    }
+}
+
+@media (max-width: 360px) {
+    #calculator {
+        padding: var(--spacing-sm);
+    }
+    
+    #keys {
+        grid-gap: var(--spacing-sm);
+    }
+    
+    button {
+        height: 55px;
+        font-size: 1.1rem;
+    }
+    
+    #display {
+        font-size: 1.8rem;
+        height: 70px;
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+    }
+    
+    #calculator {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        background: white;
+    }
+    
+    #display {
+        color: black;
+        background: #f5f5f5;
+    }
+    
+    button {
+        background: #eee;
+        color: black;
+        box-shadow: none;
+    }
+    
+    button:nth-child(1),
+    button:nth-child(5),
+    button:nth-child(9),
+    button:nth-child(13) {
+        background: #ffcc80;
+    }
+    
+    button:nth-child(16) {
+        background: #a5d6a7;
+    }
+    
+    button:nth-child(17) {
+        background: #ef9a9a;
+    }
+}
+
+/* ===== HIGH CONTRAST MODE (ACCESSIBILITY) ===== */
+@media (prefers-contrast: high) {
+    body {
+        background: black;
+    }
+    
+    #calculator {
+        background: #222;
+        border: 2px solid white;
+    }
+    
+    #display {
+        background: black;
+        border: 2px solid white;
+    }
+    
+    button {
+        background: black;
+        border: 2px solid white;
+        color: white;
+    }
+    
+    button:nth-child(1),
+    button:nth-child(5),
+    button:nth-child(9),
+    button:nth-child(13) {
+        background: #aa5500;
+    }
+    
+    button:nth-child(16) {
+        background: #006600;
+    }
+    
+    button:nth-child(17) {
+        background: #990000;
+    }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    body::before,
+    body::after {
+        animation: none !important;
+    }
+}
+
+/* ===== CUSTOM SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== FOCUS STATES ===== */
+button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* ===== DARK/LIGHT MODE TRANSITIONS ===== */
+body.light-mode {
+    --primary-gradient-start: #74ebd5;
+    --primary-gradient-end: #ACB6E5;
+    --button-bg: rgba(0, 0, 0, 0.1);
+    --button-hover: rgba(0, 0, 0, 0.2);
+    --operator-bg: rgba(255, 102, 0, 0.5);
+    --equals-bg: rgba(25, 179, 91, 0.7);
+    --clear-bg: rgba(204, 51, 51, 0.7);
+    --text-primary: #333333;
+    --text-secondary: rgba(0, 0, 0, 0.8);
+    --text-display: #333333;
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    transition: all 0.5s ease;
+}
+
+body.light-mode #calculator {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode #display {
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
